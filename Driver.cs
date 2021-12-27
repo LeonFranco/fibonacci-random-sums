@@ -47,7 +47,7 @@ class Driver
         watch.Reset();
         watch.Start();
         
-        var result = Parallel.ForEach(randomNumbers, nthFib =>
+        Parallel.ForEach(randomNumbers, nthFib =>
         {
             BigInteger result = Fibonacci.IterativeFibonnaci(nthFib);
             lock (fibLock) 
@@ -62,7 +62,7 @@ class Driver
         this.sums.Add(sum);
     }
 
-    public void RunLazyFibonnaciRandomSum()
+    public void RunSerialLazyFibonnaciRandomSum()
     {
         LazyFibonacci lazyFib = new LazyFibonacci();
         BigInteger sum = 0;
@@ -76,7 +76,31 @@ class Driver
         }
 
         watch.Stop();
-        Console.WriteLine($"Lazy fib took {watch.Elapsed.ToString(@"m\:ss\.ff")}");
+        Console.WriteLine($"Serial lazy fib took {watch.Elapsed.ToString(@"m\:ss\.ff")}");
+
+        this.sums.Add(sum);
+    }
+
+    public void RunParallelLazyFibonnaciRandomSum()
+    {
+        ThreadSafeLazyFibonacci tsLazyFib = new ThreadSafeLazyFibonacci();
+        BigInteger sum = 0;
+        object fibLock = new object();
+
+        watch.Reset();
+        watch.Start();
+
+        Parallel.ForEach(randomNumbers, nthFib =>
+        {
+            BigInteger result = tsLazyFib.Get(nthFib);
+            lock (fibLock) 
+            {
+                sum += result;
+            }
+        });
+
+        watch.Stop();
+        Console.WriteLine($"Parallel lazy fib took {watch.Elapsed.ToString(@"m\:ss\.ff")}");
 
         this.sums.Add(sum);
     }

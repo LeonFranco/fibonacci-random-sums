@@ -11,7 +11,7 @@ public class LazyFibonacci
         this.Sequence.Add(1);
     }
 
-    public BigInteger Get(int seqIndex)
+    public virtual BigInteger Get(int seqIndex)
     {
         if (this.Sequence.Count <= seqIndex)
         {
@@ -21,7 +21,7 @@ public class LazyFibonacci
         return Sequence[seqIndex];
     }
 
-    private void UpdateSequence(int seqIndex)
+    protected void UpdateSequence(int seqIndex)
     {
         for (int i = this.Sequence.Count; i <= seqIndex; ++i) {
             BigInteger firstTerm = this.Sequence[i - 2];

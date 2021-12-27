@@ -2,5 +2,7 @@
 
 driver.RunSerialIterativeFibonnaciRandomSum();
 driver.RunParallelIterativeFibonnaciRandomSum();
-driver.RunLazyFibonnaciRandomSum();
+driver.RunSerialLazyFibonnaciRandomSum();
+driver.RunParallelLazyFibonnaciRandomSum();
+
 driver.ValidateSums();
