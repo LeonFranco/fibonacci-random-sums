@@ -9,14 +9,12 @@ class Driver
     private static int MAX_NTH_FIB = 100_000;
 
     private Stopwatch watch;
-    private LazyFibonacci lazyFib;
     private List<BigInteger> sums;
     private int[] randomNumbers;
 
     public Driver() 
     {
         this.watch = new Stopwatch();
-        this.lazyFib = new LazyFibonacci();
         this.sums = new List<BigInteger>();
         this.randomNumbers = Enumerable.Range(0, MAX_SIZE)
             .Select(_ => rand.Next(MIN_NTH_FIB, MAX_NTH_FIB))
@@ -25,10 +23,10 @@ class Driver
 
     public void RunSerialIterativeFibonnaciRandomSum() 
     {
+        BigInteger sum = 0;
+
         watch.Reset();
         watch.Start();
-
-        BigInteger sum = 0;
 
         foreach (int nthFib in this.randomNumbers)
         {
@@ -43,11 +41,11 @@ class Driver
 
     public void RunParallelIterativeFibonnaciRandomSum() 
     {
-        watch.Reset();
-        watch.Start();
-
         BigInteger sum = 0;
         object fibLock = new object();
+
+        watch.Reset();
+        watch.Start();
         
         var result = Parallel.ForEach(randomNumbers, nthFib =>
         {
@@ -66,10 +64,11 @@ class Driver
 
     public void RunLazyFibonnaciRandomSum()
     {
+        LazyFibonacci lazyFib = new LazyFibonacci();
+        BigInteger sum = 0;
+
         watch.Reset();
         watch.Start();
-
-        BigInteger sum = 0;
 
         foreach (int nthFib in this.randomNumbers)
         {
