@@ -5,8 +5,8 @@ class Driver
 {
     private static Random rand = new Random(0);
     private static int MAX_SIZE = 100;
-    private static int MIN_NTH_FIB = 1;
-    private static int MAX_NTH_FIB = 400000;
+    private static int MIN_NTH_FIB = 10_000;
+    private static int MAX_NTH_FIB = 100_000;
 
     private Stopwatch watch;
     private LazyFibonacci lazyFib;
@@ -23,18 +23,43 @@ class Driver
             .ToArray<int>();
     }
 
-    public void RunIterativeFibonnaciRandomSum() {
+    public void RunSerialIterativeFibonnaciRandomSum() 
+    {
         watch.Reset();
         watch.Start();
 
         BigInteger sum = 0;
+
         foreach (int nthFib in this.randomNumbers)
         {
             sum += Fibonacci.IterativeFibonnaci(nthFib);
         }
 
         watch.Stop();
-        Console.WriteLine($"Regular iterative fib took {watch.Elapsed.ToString(@"m\:ss\.ff")}");
+        Console.WriteLine($"Serial iterative fib took {watch.Elapsed.ToString(@"m\:ss\.ff")}");
+
+        this.sums.Add(sum);
+    }
+
+    public void RunParallelIterativeFibonnaciRandomSum() 
+    {
+        watch.Reset();
+        watch.Start();
+
+        BigInteger sum = 0;
+        object fibLock = new object();
+        
+        var result = Parallel.ForEach(randomNumbers, nthFib =>
+        {
+            BigInteger result = Fibonacci.IterativeFibonnaci(nthFib);
+            lock (fibLock) 
+            {
+                sum += result;
+            }
+        });
+
+        watch.Stop();
+        Console.WriteLine($"Parallel iterative fib took {watch.Elapsed.ToString(@"m\:ss\.ff")}");
 
         this.sums.Add(sum);
     }
@@ -45,6 +70,7 @@ class Driver
         watch.Start();
 
         BigInteger sum = 0;
+
         foreach (int nthFib in this.randomNumbers)
         {
             sum += lazyFib.Get(nthFib);
@@ -56,7 +82,8 @@ class Driver
         this.sums.Add(sum);
     }
 
-    public void validateSums() {
+    public void ValidateSums() 
+    {
         for (int i = 1; i < this.sums.Count; ++i)
         {
             Debug.Assert(sums[i - 1] == sums[i]);
