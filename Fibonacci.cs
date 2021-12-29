@@ -2,16 +2,7 @@ using System.Numerics;
 
 class Fibonacci
 {
-    static public BigInteger RecursiveFibonnaci(int nthFibNum)
-    {
-        if (nthFibNum <= 1) {
-            return nthFibNum;
-        }
-
-        return Fibonacci.RecursiveFibonnaci(nthFibNum - 1) + Fibonacci.RecursiveFibonnaci(nthFibNum - 2);
-    }
-
-    static public BigInteger IterativeFibonnaci(int nthFibNum) {
+    static public BigInteger DPFibonnaci(int nthFibNum) {
         List<BigInteger> sequence = new List<BigInteger>();
         sequence.Add(0);
         sequence.Add(1);
@@ -24,5 +15,27 @@ class Fibonacci
         }
 
         return sequence[nthFibNum];
+    }
+
+    static public BigInteger MemoFibonnaci(int nthFibNum)
+    {
+        BigInteger[] seq = new BigInteger[nthFibNum + 1];
+        Array.Fill<BigInteger>(seq, -1, 0, nthFibNum + 1);
+        seq[0] = 0;
+        seq[1] = 1;
+
+        return Fibonacci.MemoFibonnaciDriver(seq, nthFibNum);
+    }
+
+    static private BigInteger MemoFibonnaciDriver(BigInteger[] seq, int nthFibNum)
+    {
+        if (seq[nthFibNum] == -1)
+        {
+            seq[nthFibNum] = 
+                Fibonacci.MemoFibonnaciDriver(seq, nthFibNum - 1) + 
+                Fibonacci.MemoFibonnaciDriver(seq, nthFibNum - 2);
+        }
+
+        return seq[nthFibNum];
     }
 }

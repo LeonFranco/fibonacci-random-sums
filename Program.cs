@@ -1,7 +1,8 @@
 ﻿Driver driver = new Driver();
 
-driver.RunSerialIterativeFibonnaciRandomSum();
-driver.RunParallelIterativeFibonnaciRandomSum();
+// driver.RunSerialMemoFibonnaciRandomSum();
+driver.RunSerialDPFibonnaciRandomSum();
+driver.RunParallelDPFibonnaciRandomSum();
 driver.RunSerialLazyFibonnaciRandomSum();
 driver.RunParallelLazyFibonnaciRandomSum();
 

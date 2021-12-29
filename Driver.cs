@@ -19,26 +19,41 @@ class Driver
             .Select(_ => rand.Next(MIN_NTH_FIB, MAX_NTH_FIB))
             .ToArray<int>();
     }
-
-    public void RunSerialIterativeFibonnaciRandomSum() 
+    public void RunSerialMemoFibonnaciRandomSum() 
     {
-        Console.Write("Serial iterative ");
+        Console.Write("Serial Memo ");
         this.GetStat(() =>
         {
             BigInteger sum = 0;
 
             foreach (int nthFib in this.randomNumbers)
             {
-                sum += Fibonacci.IterativeFibonnaci(nthFib);
+                sum += Fibonacci.MemoFibonnaci(nthFib);
             }
 
             return sum;
         });
     }
 
-    public void RunParallelIterativeFibonnaciRandomSum() 
+    public void RunSerialDPFibonnaciRandomSum() 
     {
-        Console.Write("Parallel iterative ");
+        Console.Write("Serial DP ");
+        this.GetStat(() =>
+        {
+            BigInteger sum = 0;
+
+            foreach (int nthFib in this.randomNumbers)
+            {
+                sum += Fibonacci.DPFibonnaci(nthFib);
+            }
+
+            return sum;
+        });
+    }
+
+    public void RunParallelDPFibonnaciRandomSum() 
+    {
+        Console.Write("Parallel DP ");
         this.GetStat(() =>
         {
             BigInteger sum = 0;
@@ -46,7 +61,7 @@ class Driver
 
             Parallel.ForEach(randomNumbers, nthFib =>
             {
-                BigInteger result = Fibonacci.IterativeFibonnaci(nthFib);
+                BigInteger result = Fibonacci.DPFibonnaci(nthFib);
                 lock (fibLock) 
                 {
                     sum += result;
